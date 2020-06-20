@@ -130,7 +130,7 @@ def main():
         b"29": "Indonesian",
     }
 
-    langs = set()
+    langs = set(["English"])
     for key in params:
         _, _, lang_code = key.partition(b'_')
         if lang_code and lang_code.isdigit():
