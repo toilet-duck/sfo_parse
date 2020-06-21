@@ -8,7 +8,7 @@ Quick and dirty PSV SFO parser
 ./sfo_parse.py
 # Alternatively specify path to param.sfo
 ./sfo_parse.py /path/to/param.sfo
-# Optional --all argument to print parameters aside from TITLExxx
+# Optional --all argument to print all parameters
 ./sfo_parse.py --all
 ```
 
