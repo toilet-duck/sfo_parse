@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
+import argparse
 import binascii
 import struct
 import sys
 
 
 def main():
-    if len(sys.argv) > 1:
-        file = sys.argv[1]
-    else:
-        print("No file specified. Assuming 'param.sfo' in current directory.")
-        file = 'param.sfo'
+
+    parser = argparse.ArgumentParser(description='Output parameters from a SFO format file.')
+    parser.add_argument('--all', action='store_true')
+    parser.add_argument('file', metavar='file', type=str, nargs='?', default='param.sfo')
+    args = parser.parse_args()
 
     try:
-        with open(file, 'rb') as f:
+        with open(args.file, 'rb') as f:
             data = f.read()
     except FileNotFoundError:
         sys.exit("No 'param.sfo' file provided.")
@@ -22,7 +23,6 @@ def main():
     HEADER_BYTES=20
     header_raw = data[0:20]
     header = struct.unpack('<4s4BIII', header_raw)
-#    print(header)
 
     # Variable and data references
     name_table_start = header[5]
@@ -93,9 +93,16 @@ def main():
 
     params = dict(zip(param_names, param_values))
 
-    for k, v in params.items():
-        if k.startswith(b"TITLE") and k != b"TITLE_ID":
-            print("{}: {}".format(k.decode("utf-8"), v.decode("utf-8")))
+    if not args.all:
+        for k, v in params.items():
+            if k.startswith(b"TITLE") and k != b"TITLE_ID":
+                print("{}: {}".format(k.decode("utf-8"), v.decode("utf-8")))
+    else:
+        for k, v in params.items():
+            if isinstance(v, bytes):
+                print("{}: {}".format(k.decode("utf-8"), v.decode("utf-8")))
+            else:
+                print("{}: {}".format(k.decode("utf-8"), v))
 
     lang_map = {
         b"00": "Japanese",
