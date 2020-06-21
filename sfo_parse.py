@@ -137,7 +137,7 @@ def main():
         b"29": "Indonesian",
     }
 
-    langs = set(["English"])
+    langs = set()
     for key in params:
         _, _, lang_code = key.partition(b'_')
         if lang_code and lang_code.isdigit():
@@ -146,7 +146,8 @@ def main():
             except KeyError:
                 print("Unsupported language code: {}".format(lang_code))
 
-    print("\n\nLanguages: {}".format(", ".join(sorted(langs))))
+    if langs:
+        print("\n\nLanguages: {}".format(", ".join(sorted(langs))))
 
 if __name__ == '__main__':
     main()
